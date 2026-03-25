@@ -5,9 +5,9 @@ set -euo pipefail
 # setup.sh — macOS Dev Environment Setup
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/<user>/<repo>/main/setup.sh | bash
+#   curl -fsSL aman.computer/install-claudekit.sh | bash
 #   — or —
-#   git clone <repo> && cd mac-setup && ./setup.sh
+#   git clone https://github.com/amanfromsolan/claude-kit.git && cd claude-kit && ./setup.sh
 # ─────────────────────────────────────────────────────────
 
 REPO_URL="https://github.com/amanfromsolan/claude-kit.git"
