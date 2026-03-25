@@ -16,7 +16,10 @@ install_nvm() {
         nvm_installed=true
     else
         info "Installing NVM..."
-        curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | PROFILE=/dev/null bash
+        local nvm_version
+        nvm_version="$(curl -fsSL https://api.github.com/repos/nvm-sh/nvm/releases/latest | grep '"tag_name"' | sed 's/.*"tag_name": *"//;s/".*//')" || nvm_version="v0.40.1"
+        info "Using NVM $nvm_version"
+        curl -fsSL "https://raw.githubusercontent.com/nvm-sh/nvm/$nvm_version/install.sh" | PROFILE=/dev/null bash
 
         # Add to shell configs ourselves (we suppress nvm's default with PROFILE=/dev/null)
         ensure_shell_configs

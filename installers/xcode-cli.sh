@@ -19,10 +19,17 @@ install_xcode_cli() {
     # Trigger the install dialog
     xcode-select --install 2>/dev/null || true
 
-    # Wait for installation to complete
+    # Wait for installation to complete (timeout after 10 minutes)
     info "Waiting for installation to finish..."
+    local waited=0
     until xcode-select -p &>/dev/null; do
+        if (( waited >= 600 )); then
+            error "Timed out waiting for Xcode CLI Tools (10 min)"
+            track_status "Xcode CLI Tools" "failed"
+            return 1
+        fi
         sleep 5
+        (( waited += 5 ))
     done
 
     if xcode-select -p &>/dev/null; then

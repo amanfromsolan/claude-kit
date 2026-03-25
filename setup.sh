@@ -53,6 +53,12 @@ trap cleanup EXIT
 main() {
     setup_project_dir
 
+    # If stdin is a pipe (curl | bash), reattach to real terminal
+    # so interactive prompts (Homebrew sudo, Git config) still work
+    if [[ ! -t 0 ]]; then
+        { exec < /dev/tty; } 2>/dev/null || true
+    fi
+
     # Source shared UI
     source "$PROJECT_DIR/lib/ui.sh"
 
@@ -71,13 +77,16 @@ main() {
     ensure_shell_configs
 
     # Run installers in dependency order
-    install_xcode_cli
-    install_homebrew
-    install_ghostty
-    install_bun
-    install_nvm
-    install_claude_code
-    configure_git
+    # Xcode CLI + Homebrew are foundational — bail if they fail
+    install_xcode_cli || { error "Cannot continue without Xcode CLI Tools"; summary; return 1; }
+    install_homebrew || { error "Cannot continue without Homebrew"; summary; return 1; }
+
+    # The rest are independent — one failure shouldn't block others
+    install_ghostty || true
+    install_bun || true
+    install_nvm || true
+    install_claude_code || true
+    configure_git || true
 
     # Show what happened
     summary

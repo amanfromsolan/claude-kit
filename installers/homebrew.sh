@@ -17,17 +17,20 @@ install_homebrew() {
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
     # Determine brew path based on architecture
+    local brew_shellenv=""
     if [[ -f /opt/homebrew/bin/brew ]]; then
-        BREW_SHELLENV='eval "$(/opt/homebrew/bin/brew shellenv)"'
+        brew_shellenv='eval "$(/opt/homebrew/bin/brew shellenv)"'
         eval "$(/opt/homebrew/bin/brew shellenv)"
     elif [[ -f /usr/local/bin/brew ]]; then
-        BREW_SHELLENV='eval "$(/usr/local/bin/brew shellenv)"'
+        brew_shellenv='eval "$(/usr/local/bin/brew shellenv)"'
         eval "$(/usr/local/bin/brew shellenv)"
     fi
 
     # Add to shell configs
-    ensure_shell_configs
-    append_to_shells "$BREW_SHELLENV"
+    if [[ -n "$brew_shellenv" ]]; then
+        ensure_shell_configs
+        append_to_shells "$brew_shellenv"
+    fi
 
     if command -v brew &>/dev/null; then
         success "Homebrew installed"
