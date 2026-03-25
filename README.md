@@ -17,7 +17,7 @@ Modular, idempotent macOS dev environment setup. Run it on a fresh MacBook or re
 ## Quick start
 
 ```bash
-curl -fsSL aman.computer/install-claudekit.sh | bash
+curl -fsSL aman.computer/claudekit.sh | bash
 ```
 
 Or clone and run:
